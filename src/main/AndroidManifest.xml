@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.ipctest">
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SecondActivity"
+            android:configChanges="screenLayout"
+            android:label="SecondActivity"
+            android:process=":remote" />
+        <activity
+            android:name=".ThirdActivity"
+            android:configChanges="screenLayout"
+            android:label="ThirdActivity"
+            android:process="com.example.ipctest.remote" />
+        <activity
+            android:name=".messenger.MessengerActivity"
+            android:label="MessengerActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".aidl.BookManagerActivity"
+            android:label="BookManagerActivity" />
+
+        <service
+            android:name=".messenger.MessengerService"
+            android:process=":remote" />
+        <service
+            android:name=".aidl.BookManagerService"
+            android:process=":remote" />
+
+        <receiver android:name=".phonestate.PhoneStateReceiver">
+            <intent-filter>
+
+                <!-- 来电监听 -->
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <!-- 去电监听 -->
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name=".provider.BookProvider"
+            android:authorities="com.example.ipctest.book.provider"
+            android:permission="com.example.PROVIDER"
+            android:process=":provider" />
+
+        <activity android:name=".provider.ProviderActivity"></activity>
+    </application>
+
+</manifest>
