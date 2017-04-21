@@ -48,6 +48,9 @@
         <service
             android:name=".aidl.BookManagerService"
             android:process=":remote" />
+        <service
+            android:name=".aidl.BinderPoolService"
+            android:process=":remote" />
 
         <receiver android:name=".phonestate.PhoneStateReceiver">
             <intent-filter>

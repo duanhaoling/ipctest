@@ -27,11 +27,13 @@ import butterknife.ButterKnife;
  */
 
 public class MessengerActivity extends AppCompatActivity {
+
     private static final String TAG = " MessengerAvtivity";
     @Bind(R.id.bt_send_msg)
     Button btSendMsg;
     @Bind(R.id.tv_msg_content)
     TextView tvMsgContent;
+
     private Messenger mService;
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -48,7 +50,6 @@ public class MessengerActivity extends AppCompatActivity {
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-
         }
 
         @Override

@@ -11,6 +11,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.example.ipctest.R;
 
@@ -75,6 +76,9 @@ public class BookManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_manager);
         Intent intent = new Intent(this, BookManagerService.class);
+        //Android5.0 不允许隐式调用服务,使用以下方式
+/*        Intent intent1 = new Intent();
+        intent1.setComponent(new ComponentName("com.example.ipctest", "com.example.ipctest.aidl.BookManagerService"));*/
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -93,4 +97,42 @@ public class BookManagerActivity extends AppCompatActivity {
         unbindService(mConnection);
         super.onDestroy();
     }
+
+    public void binderPoolTest(View view) {
+        new Thread() {
+            @Override
+            public void run() {
+                dowork();
+            }
+        }.start();
+    }
+
+    ISecurityCenter mSecurityCenter = null;
+    ICompute mCompute = null;
+    private void dowork() {
+        BinderPool binderPool = BinderPool.getInstance(BookManagerActivity.this);
+        IBinder securityBinder = binderPool.queryBinder(BinderPool.BINDER_SECURITY_CENTER);
+        mSecurityCenter = SecurityCenterImpl.asInterface(securityBinder);
+        Log.d(TAG, "visit ISecurityCenter");
+        String msg = "helloworld-安卓";
+        Log.d(TAG, "content:" + msg);
+        try {
+            String password = mSecurityCenter.encrypt(msg);
+            Log.d(TAG, "encrypt:" + msg);
+            Log.d(TAG, "decrypt:" + mSecurityCenter.decrypt(password));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "visit ICompute");
+        IBinder computeBinder = binderPool.queryBinder(BinderPool.BINDER_COMPUTE);
+        mCompute = ComputeImpl.asInterface(computeBinder);
+        try {
+            Log.d(TAG, "3+6 = " + mCompute.add(3, 6));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

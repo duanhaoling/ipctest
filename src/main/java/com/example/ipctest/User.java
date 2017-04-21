@@ -16,6 +16,9 @@ public class User implements Parcelable {
 
     public Book book;
 
+    public User() {
+    }
+
     public User(int userId, String userName, boolean isMale) {
         this.userId = userId;
         this.userName = userName;
@@ -54,4 +57,14 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", isMale=" + isMale +
+                ", book=" + book +
+                '}';
+    }
 }
